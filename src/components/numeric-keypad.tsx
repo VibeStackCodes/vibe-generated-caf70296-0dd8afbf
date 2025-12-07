@@ -24,6 +24,13 @@ interface KeypadButtonProps {
 /**
  * Individual keypad button component
  * Supports different variants for visual distinction with enhanced visual feedback
+ *
+ * Visual Feedback Features:
+ * - Smooth color transitions on hover
+ * - Press animation with scale and shadow changes
+ * - Focus ring for keyboard navigation
+ * - Disabled state with reduced opacity
+ * - Brand colors (accent: #FF6B35, primary: #0066FF)
  */
 function KeypadButton({
   value,
@@ -34,21 +41,47 @@ function KeypadButton({
   children,
   className = '',
 }: KeypadButtonProps) {
+  // Base styles with smooth transitions and visual feedback
   const baseStyles =
-    'w-full h-14 font-semibold text-lg rounded-lg transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg active:shadow-sm'
+    'w-full h-14 font-semibold text-lg rounded-lg transition-all duration-150 ' +
+    'active:scale-95 active:translate-y-0.5 ' +
+    'disabled:opacity-50 disabled:cursor-not-allowed ' +
+    'shadow-md hover:shadow-lg active:shadow-sm ' +
+    'transform active:ring-inset'
 
   const variantStyles = {
+    // Default: Light gray for number buttons
     default:
-      'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 active:bg-gray-300 dark:active:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-700',
+      'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50 ' +
+      'hover:bg-gray-200 dark:hover:bg-gray-700 ' +
+      'active:bg-gray-300 dark:active:bg-gray-600 ' +
+      'focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-600 ' +
+      'focus:ring-offset-2 dark:focus:ring-offset-gray-950',
+    // Operator: Accent color (#FF6B35) for +, -, ×, ÷, DEL
     operator:
-      'bg-[#FF6B35] dark:bg-[#FF6B35] text-white hover:bg-[#E55A24] dark:hover:bg-[#E55A24] active:bg-[#D44914] dark:active:bg-[#D44914] focus:outline-none focus:ring-2 focus:ring-[#FF6B35] dark:focus:ring-[#FF6B35] focus:ring-opacity-50',
+      'bg-[#FF6B35] dark:bg-[#FF6B35] text-white ' +
+      'hover:bg-[#E55A24] dark:hover:bg-[#E55A24] ' +
+      'active:bg-[#D44914] dark:active:bg-[#D44914] ' +
+      'focus:outline-none focus:ring-2 focus:ring-[#FF6B35] dark:focus:ring-[#FF6B35] ' +
+      'focus:ring-offset-2 dark:focus:ring-offset-gray-950 focus:ring-opacity-75',
+    // Equals: Primary color (#0066FF) for =
     equals:
-      'bg-[#0066FF] dark:bg-[#0066FF] text-white hover:bg-[#0052CC] dark:hover:bg-[#0052CC] active:bg-[#003D99] dark:active:bg-[#003D99] focus:outline-none focus:ring-2 focus:ring-[#0066FF] dark:focus:ring-[#0066FF] focus:ring-opacity-50',
+      'bg-[#0066FF] dark:bg-[#0066FF] text-white ' +
+      'hover:bg-[#0052CC] dark:hover:bg-[#0052CC] ' +
+      'active:bg-[#003D99] dark:active:bg-[#003D99] ' +
+      'focus:outline-none focus:ring-2 focus:ring-[#0066FF] dark:focus:ring-[#0066FF] ' +
+      'focus:ring-offset-2 dark:focus:ring-offset-gray-950 focus:ring-opacity-75',
   }
 
   return (
     <button
-      onClick={() => onClick(value)}
+      onClick={() => {
+        // Add subtle haptic feedback if available (for touch devices)
+        if ('vibrate' in navigator) {
+          navigator.vibrate(10)
+        }
+        onClick(value)
+      }}
       disabled={disabled}
       className={`${baseStyles} ${variantStyles[variant]} ${className}`}
       aria-label={label || value}
